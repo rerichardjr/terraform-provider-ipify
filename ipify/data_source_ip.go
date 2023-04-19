@@ -14,12 +14,18 @@ const ipifyURL = "https://api64.ipify.org/?format=json"
 
 func dataSourceIP() *schema.Resource {
 	return &schema.Resource{
-		// Read: dataSourceIPRead,
+		Description: "Data source for getting public IP address.",
 		ReadContext: dataSourceIPRead,
 		Schema: map[string]*schema.Schema{
 			"ip": {
+				Description: "The public IP address.",
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"ip_cidr": {
+				Description: "The public IP address in CIDR notation.",
+				Type:        schema.TypeString,
+				Computed:    true,
 			},
 		},
 	}
@@ -56,6 +62,20 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 
+	ipAddressType := net.ParseIP(message["ip"].(string))
+
+	if ipAddressType.To4() != nil {
+		// IP is IPv4, set CIDR to /32
+		if err := d.Set("ip_cidr", fmt.Sprintf("%s/32", message["ip"].(string))); err != nil {
+			return diag.FromErr(err)
+		}
+	} else {
+		// IP is IPv6, set CIDR to /128
+		if err := d.Set("ip_cidr", fmt.Sprintf("%s/128", message["ip"].(string))); err != nil {
+			return diag.FromErr(err)
+		}
+	}
+	
 	d.SetId(message["ip"].(string))
 
 	return diags
