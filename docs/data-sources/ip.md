@@ -3,12 +3,12 @@
 page_title: "ipify_ip Data Source - terraform-provider-ipify"
 subcategory: ""
 description: |-
-  
+    Data source for getting public IP address.
 ---
 
 # ipify_ip (Data Source)
 
-
+Data source for getting public IP address.
 
 
 
@@ -18,6 +18,7 @@ description: |-
 ### Read-Only
 
 - `id` (String) The ID of this resource.
-- `ip` (String)
+- `ip` (String) The public IP address.
+- `ip_cidr` (String) The public IP address in CIDR notation.
 
 
