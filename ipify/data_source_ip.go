@@ -64,16 +64,16 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 
-	ipAddressType := net.ParseIP(message["ip"].(string))
+	ipAddress := net.ParseIP(message["ip"].(string))
 
 	if ipAddressType.To4() != nil {
 		// IP is IPv4, set CIDR to /32
-		if err := d.Set("ip_cidr", fmt.Sprintf("%s/32", message["ip"].(string))); err != nil {
+		if err := d.Set("ip_cidr", fmt.Sprintf("%s/32", ipAddress)); err != nil {
 			return diag.FromErr(err)
 		}
 	} else {
 		// IP is IPv6, set CIDR to /128
-		if err := d.Set("ip_cidr", fmt.Sprintf("%s/128", message["ip"].(string))); err != nil {
+		if err := d.Set("ip_cidr", fmt.Sprintf("%s/128", ipAddress)); err != nil {
 			return diag.FromErr(err)
 		}
 	}
