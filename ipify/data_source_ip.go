@@ -60,25 +60,44 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 
-	if err := d.Set("ip", message["ip"]); err != nil {
+	publicIP := message["ip"].(string)
+
+	if err := d.Set("ip", publicIP); err != nil {
 		return diag.FromErr(err)
 	}
 
-	ipAddress := net.ParseIP(message["ip"].(string))
+	// get the CIDR for the public IP, will be either 32 for IPv4 or 128 for IPv6
+	cidr, err := getCIDR(publicIP)
 
-	if ipAddressType.To4() != nil {
-		// IP is IPv4, set CIDR to /32
-		if err := d.Set("ip_cidr", fmt.Sprintf("%s/32", ipAddress)); err != nil {
-			return diag.FromErr(err)
-		}
-	} else {
-		// IP is IPv6, set CIDR to /128
-		if err := d.Set("ip_cidr", fmt.Sprintf("%s/128", ipAddress)); err != nil {
-			return diag.FromErr(err)
-		}
+	if err != nil {
+		return diag.FromErr(err)
 	}
-	
-	d.SetId(message["ip"].(string))
+
+	// set ip_cidr to the public IP plus the CIDR from getCIDR
+	if err := d.Set("ip_cidr", fmt.Sprintf("%s/%s", publicIP, cidr)); err != nil {
+		return diag.FromErr(err)
+	}
+
+	// set the id to the md5 hash of the public IP
+	ipHash := md5.Sum([]byte(publicIP))
+	d.SetId(hex.EncodeToString(ipHash[:]))
 
 	return diags
+}
+
+func getCIDR(ip string) (cidr string, err error) {
+	ipAddress := net.ParseIP(ip)
+	if ipAddress != nil {
+		if ipAddress.To4() != nil {
+			cidr = "32"
+			return
+		} else if ipAddress.To16() != nil {
+			cidr = "128"
+			return
+		} else {
+			return "", fmt.Errorf("Can't determine whether the IP retrieved from %s is IPv4 or IPv6.", ipifyURL)
+		}
+	} else {
+		return "", fmt.Errorf("The IP retrieved from %s doesn't appear to be valid.", ipifyURL)
+	}
 }
