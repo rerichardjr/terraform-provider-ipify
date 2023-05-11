@@ -81,8 +81,8 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 
 	// set the id to the md5 hash of the public IP
-	ipHash := md5.Sum([]byte(publicIP))
-	d.SetId(hex.EncodeToString(ipHash[:]))
+	publicIPHash := md5.Sum([]byte(publicIP))
+	d.SetId(hex.EncodeToString(publicIPHash[:]))
 
 	return diags
 }
