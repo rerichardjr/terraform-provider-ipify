@@ -85,13 +85,13 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	return diags
 }
 
-func getCIDR(ip string) (cidr string, err error) {
-	ipAddress := net.ParseIP(ip)
-	if ipAddress != nil {
-		if ipAddress.To4() != nil {
+func getCIDR(publicIP string) (cidr string, err error) {
+	ipAddressType := net.ParseIP(publicIP)
+	if ipAddressType != nil {
+		if ipAddressType.To4() != nil {
 			cidr = "32"
 			return
-		} else if ipAddress.To16() != nil {
+		} else if ipAddressType.To16() != nil {
 			cidr = "128"
 			return
 		} else {
