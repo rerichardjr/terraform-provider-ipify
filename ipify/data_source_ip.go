@@ -91,11 +91,9 @@ func getCIDR(publicIP string) (cidr string, err error) {
 	ipAddressType := net.ParseIP(publicIP)
 	if ipAddressType != nil {
 		if ipAddressType.To4() != nil {
-			cidr = "32"
-			return
+			return "32", nil
 		} else if ipAddressType.To16() != nil {
-			cidr = "128"
-			return
+			return "128", nil
 		} else {
 			return "", fmt.Errorf("Can't determine whether the IP retrieved from %s is IPv4 or IPv6.", ipifyURL)
 		}
