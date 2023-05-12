@@ -92,12 +92,11 @@ func getCIDR(publicIP string) (cidr string, err error) {
 	if ipAddressType != nil {
 		if ipAddressType.To4() != nil {
 			return "32", nil
-		} else if ipAddressType.To16() != nil {
-			return "128", nil
-		} else {
-			return "", fmt.Errorf("Can't determine whether the IP retrieved from %s is IPv4 or IPv6.", ipifyURL)
 		}
-	} else {
-		return "", fmt.Errorf("The IP retrieved from %s doesn't appear to be valid.", ipifyURL)
+		if ipAddressType.To16() != nil {
+			return "128", nil
+		}
+		return "", fmt.Errorf("Can't determine whether the IP retrieved from %s is IPv4 or IPv6.", ipifyURL)
 	}
+	return "", fmt.Errorf("The IP retrieved from %s doesn't appear to be valid.", ipifyURL)
 }
