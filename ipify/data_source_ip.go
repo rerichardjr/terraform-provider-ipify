@@ -64,10 +64,6 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	publicIP := message["ip"].(string)
 
-	if err := d.Set("ip", publicIP); err != nil {
-		return diag.FromErr(err)
-	}
-
 	// get the CIDR for the public IP, will be either 32 for IPv4 or 128 for IPv6
 	cidr, err := getCIDR(publicIP)
 
@@ -75,6 +71,11 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.FromErr(err)
 	}
 
+	// set ip to the public IP	
+	if err := d.Set("ip", publicIP); err != nil {
+		return diag.FromErr(err)
+	}	
+	
 	// set ip_cidr to the public IP plus the CIDR from getCIDR
 	if err := d.Set("ip_cidr", fmt.Sprintf("%s/%s", publicIP, cidr)); err != nil {
 		return diag.FromErr(err)
