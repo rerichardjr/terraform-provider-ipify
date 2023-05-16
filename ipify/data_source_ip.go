@@ -90,14 +90,14 @@ func dataSourceIPRead(ctx context.Context, d *schema.ResourceData, m interface{}
 
 func getCIDR(publicIP string) (cidr string, err error) {
 	ipAddressType := net.ParseIP(publicIP)
-	if ipAddressType != nil {
-		if ipAddressType.To4() != nil {
-			return "32", nil
-		}
-		if ipAddressType.To16() != nil {
-			return "128", nil
-		}
-		return "", fmt.Errorf("can't determine whether the IP retrieved from %s is IPv4 or IPv6", ipifyURL)
+	if ipAddressType == nil {
+		return "", fmt.Errorf("the IP retrieved from %s doesn't appear to be valid", ipifyURL)
 	}
-	return "", fmt.Errorf("the IP retrieved from %s doesn't appear to be valid", ipifyURL)
+	if ipAddressType.To4() != nil {
+		return "32", nil
+	}
+	if ipAddressType.To16() != nil {
+		return "128", nil
+	}
+	return "", fmt.Errorf("can't determine whether the IP retrieved from %s is IPv4 or IPv6", ipifyURL)
 }
