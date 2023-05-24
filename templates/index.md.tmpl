@@ -8,7 +8,7 @@ description: |-
 # ipify Provider
 
 Provider to interact with the ipify service.  Presents your public ip in standard or CIDR notation.  Works with IPv4 and IPv6.
-Example use for the CIDR notation is building cloud infrastructure and securing public access using firewall rules.
+Use the CIDR notation for securing cloud infrastructure with firewall rules when testing builds.
 
 ## Example Usage
 
