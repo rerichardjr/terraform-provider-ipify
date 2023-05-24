@@ -2,13 +2,13 @@
 layout: ""
 page_title: "Provider: ipify"
 description: |-
-  Provider to interact with the ipify service
+  Provider to interact with [ipify.org](https://ipify.org/)
 ---
 
 # ipify Provider
 
 Provider that interacts with [ipify.org](https://ipify.org/) and returns your IPv4 or IPv6 public IP in standard and CIDR notation.
-Use the CIDR notation for securing cloud infrastructure with firewall rules when testing builds.
+Use the CIDR notation in firewall rules when you want to secure cloud infrastructure test builds.
 
 ## Example Usage
 
