@@ -2,7 +2,7 @@
 layout: ""
 page_title: "Provider: ipify"
 description: |-
-  Provider to interact with [ipify.org](https://ipify.org/)
+  Provider to interact with ipify.org
 ---
 
 # ipify Provider
