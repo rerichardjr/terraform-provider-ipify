@@ -1,7 +1,7 @@
 # terraform-provider-ipify
 ---
 
-Provider to interact with the [ipify.org](https://ipify.org/) service.  Returns your IPv4 or IPv6 public IP in standard and CIDR notation.
+Provider that interacts with [ipify.org](https://ipify.org/) and returns your IPv4 or IPv6 public IP in standard and CIDR notation.
 Use the CIDR notation for securing cloud infrastructure with firewall rules when testing builds.
 
 ## Using the provider
